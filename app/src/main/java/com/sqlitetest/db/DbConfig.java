@@ -12,5 +12,5 @@ public class DbConfig {
     public static final String DB_PATH = "DateBase";
 
     //user 表
-    public static final String TAB_USER = "create table if not exists user(id integer primary key  autoincrement, name varchar(20), passwords varchar(20))";
+    public static final String TAB_USER = "create table if not exists user(id integer primary key  autoincrement, name varchar(20), passwords varchar(20) UNIQUE)";
 }

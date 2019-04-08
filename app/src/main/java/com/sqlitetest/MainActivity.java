@@ -12,8 +12,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DBManager.ff();
-        DBManager.ff1();
-        DBManager.ff2();
-        DBManager.inertOrUpdateDateBatch();
+//        DBManager.ff1();
+//        DBManager.ff2();
     }
 }

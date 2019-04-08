@@ -1,12 +1,16 @@
 package com.sqlitetest.db;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.sqlitetest.MyApp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 12133 on 2019-4-6.
@@ -15,20 +19,37 @@ import com.sqlitetest.MyApp;
 public class DBManager {
 
     public static void ff() {
+
+        List<Student> objects = new ArrayList<>();
+        for (int i =0;i<10000;i++){
+            if (0 ==i%2){
+                objects.add(new Student(i+"","123456"));
+            }else {
+                objects.add(new Student(i+"","123456"+i));
+            }
+
+        }
         long startTime = System.currentTimeMillis();
         DatabaseContext databaseContext = new DatabaseContext(MyApp.context);
-        DbSQLiteHelper mySQLiteOpenHelper = new DbSQLiteHelper(MyApp.context);
+        DbSQLiteHelper mySQLiteOpenHelper = new DbSQLiteHelper(databaseContext);
         SQLiteDatabase writableDatabase = mySQLiteOpenHelper.getWritableDatabase();
         //开启事务
         writableDatabase.beginTransaction();
         //编写sql 语句
-        String sql = "insert into user(name,passwords) values(?,?)";
+        String sql = "INSERT OR IGNORE into user(name,passwords) values(?,?)";
+        Cursor cursor;
         SQLiteStatement stat = writableDatabase.compileStatement(sql);
         try {
-            for (int i = 0; i < 10000; i++) {
-                stat.bindString(1, "张三" + i);
-                stat.bindString(2, "123416" + i);
-                stat.executeInsert();
+            for (int i = 0; i < objects.size(); i++) {
+                Student student = objects.get(i);
+//               cursor =writableDatabase.query("user", new String[]{"passwords"}, "passwords = ?", new String[]{student.getPasswords()}, null,null, null, null);
+//                int count = cursor.getCount();
+//                if (count==0){
+                    stat.bindString(1, student.getName());
+                    stat.bindString(2, student.getPasswords());
+                    stat.executeInsert();
+//                }
+
             }
             //设置事务成功
             writableDatabase.setTransactionSuccessful();
